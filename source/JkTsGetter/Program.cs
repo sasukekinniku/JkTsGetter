@@ -70,7 +70,7 @@ namespace JkTsGetter
                     Console.WriteLine("    チャンネルは jk1(NHK), jk2(Eテレ) などのように指定します。jkをつけずに 1, 2 などとしてもOKです");
                     Console.WriteLine("");
                     Console.WriteLine("  JkTsGetter チャンネル 取得年月日 -ts [オプション...]");
-                    Console.WriteLine("    指定チャンネル、指定日のニコ生タイムシフトコメントを取得します。年月日は yyyymmdd の8桁で指定します");
+                    Console.WriteLine("    指定チャンネル、指定日1日分(午前4時区切り)のニコ生タイムシフトコメントを取得します。年月日は yyyymmdd の8桁で指定します");
                     Console.WriteLine("");
                     Console.WriteLine("  JkTsGetter -all [オプション...]");
                     Console.WriteLine("    取得可能なすべての実況公式ニコ生タイムシフトを取得します");

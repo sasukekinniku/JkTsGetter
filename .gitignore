@@ -1,0 +1,6 @@
+source
+packages
+obj
+bin
+.vs
+!JkTsGetter.ini
