@@ -1,5 +1,7 @@
 # JkTsGetter
 
+**最新版のダウンロードは https://github.com/sasukekinniku/JkTsGetter/releases/ からどうぞ**
+
 ## このソフトについて
 『ニコ生新配信録画ツール(仮』(https://com.nicovideo.jp/community/co2414037) を使って、ニコニコ実況の生放送タイムシフトを取得する Windows 用のコマンドラインツールです。前日以前だけでなく、当日の過去ログも取得できます。
 
