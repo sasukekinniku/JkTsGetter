@@ -53,6 +53,8 @@ namespace JkTsGetterTool
             this.labelSaveTo = new System.Windows.Forms.Label();
             this.buttonPastLogDownload = new System.Windows.Forms.Button();
             this.tabPageTimeShift = new System.Windows.Forms.TabPage();
+            this.buttonTimeShiftUpdateCache = new System.Windows.Forms.Button();
+            this.labelSeparator2 = new System.Windows.Forms.Label();
             this.checkTimeShiftOverwrite = new System.Windows.Forms.CheckBox();
             this.labelSeparator = new System.Windows.Forms.Label();
             this.checkTimeShiftSubFolder = new System.Windows.Forms.CheckBox();
@@ -64,7 +66,19 @@ namespace JkTsGetterTool
             this.buttonTimeShiftDownload = new System.Windows.Forms.Button();
             this.labelTimeShiftDate = new System.Windows.Forms.Label();
             this.dateTimeShiftDate = new System.Windows.Forms.DateTimePicker();
+            this.tabPageTool = new System.Windows.Forms.TabPage();
+            this.buttonToolMerge = new System.Windows.Forms.Button();
+            this.buttonToolSaveTo = new System.Windows.Forms.Button();
+            this.buttonToolXml2 = new System.Windows.Forms.Button();
+            this.buttonToolXml1 = new System.Windows.Forms.Button();
+            this.textToolSaveTo = new System.Windows.Forms.TextBox();
+            this.labelToolSaveTo = new System.Windows.Forms.Label();
+            this.textToolXml2 = new System.Windows.Forms.TextBox();
+            this.labelToolXml2 = new System.Windows.Forms.Label();
+            this.textToolXml1 = new System.Windows.Forms.TextBox();
+            this.labelToolXml1 = new System.Windows.Forms.Label();
             this.tabPageEtc = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
             this.labelAbout = new System.Windows.Forms.Label();
             this.buttonJkTsGetterAbout = new System.Windows.Forms.Button();
             this.buttonOpenGitHub = new System.Windows.Forms.Button();
@@ -73,26 +87,12 @@ namespace JkTsGetterTool
             this.buttonOpenNicoJkTop = new System.Windows.Forms.Button();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.labelSeparator2 = new System.Windows.Forms.Label();
-            this.buttonTimeShiftUpdateCache = new System.Windows.Forms.Button();
-            this.tabPageTool = new System.Windows.Forms.TabPage();
-            this.textToolXml1 = new System.Windows.Forms.TextBox();
-            this.labelToolXml1 = new System.Windows.Forms.Label();
-            this.textToolXml2 = new System.Windows.Forms.TextBox();
-            this.labelToolXml2 = new System.Windows.Forms.Label();
-            this.textToolSaveTo = new System.Windows.Forms.TextBox();
-            this.labelToolSaveTo = new System.Windows.Forms.Label();
-            this.buttonToolXml1 = new System.Windows.Forms.Button();
-            this.buttonToolXml2 = new System.Windows.Forms.Button();
-            this.buttonToolSaveTo = new System.Windows.Forms.Button();
-            this.buttonToolMerge = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabControlMain.SuspendLayout();
             this.tabPagePastLog.SuspendLayout();
             this.tabPageTimeShift.SuspendLayout();
-            this.tabPageEtc.SuspendLayout();
             this.tabPageTool.SuspendLayout();
+            this.tabPageEtc.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelChannel
@@ -296,7 +296,7 @@ namespace JkTsGetterTool
             this.buttonOpenTimeShiftBrowser.Name = "buttonOpenTimeShiftBrowser";
             this.buttonOpenTimeShiftBrowser.Size = new System.Drawing.Size(297, 23);
             this.buttonOpenTimeShiftBrowser.TabIndex = 18;
-            this.buttonOpenTimeShiftBrowser.Text = "開始日時のタイムシフトををブラウザで開く(&O)";
+            this.buttonOpenTimeShiftBrowser.Text = "開始日時のタイムシフトををブラウザーで開く(&O)";
             this.buttonOpenTimeShiftBrowser.UseVisualStyleBackColor = true;
             this.buttonOpenTimeShiftBrowser.Click += new System.EventHandler(this.buttonOpenTimeShiftBrowser_Click);
             // 
@@ -384,6 +384,24 @@ namespace JkTsGetterTool
             this.tabPageTimeShift.Text = "タイムシフト取得";
             this.tabPageTimeShift.UseVisualStyleBackColor = true;
             // 
+            // buttonTimeShiftUpdateCache
+            // 
+            this.buttonTimeShiftUpdateCache.Location = new System.Drawing.Point(15, 285);
+            this.buttonTimeShiftUpdateCache.Name = "buttonTimeShiftUpdateCache";
+            this.buttonTimeShiftUpdateCache.Size = new System.Drawing.Size(297, 23);
+            this.buttonTimeShiftUpdateCache.TabIndex = 12;
+            this.buttonTimeShiftUpdateCache.Text = "キャッシュ フォルダーに全局の全タイムシフトをダウンロード(&H)";
+            this.buttonTimeShiftUpdateCache.UseVisualStyleBackColor = true;
+            this.buttonTimeShiftUpdateCache.Click += new System.EventHandler(this.buttonTimeShiftUpdateCache_Click);
+            // 
+            // labelSeparator2
+            // 
+            this.labelSeparator2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelSeparator2.Location = new System.Drawing.Point(16, 265);
+            this.labelSeparator2.Name = "labelSeparator2";
+            this.labelSeparator2.Size = new System.Drawing.Size(296, 1);
+            this.labelSeparator2.TabIndex = 11;
+            // 
             // checkTimeShiftOverwrite
             // 
             this.checkTimeShiftOverwrite.AutoSize = true;
@@ -409,9 +427,9 @@ namespace JkTsGetterTool
             this.checkTimeShiftSubFolder.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkTimeShiftSubFolder.Location = new System.Drawing.Point(17, 174);
             this.checkTimeShiftSubFolder.Name = "checkTimeShiftSubFolder";
-            this.checkTimeShiftSubFolder.Size = new System.Drawing.Size(210, 19);
+            this.checkTimeShiftSubFolder.Size = new System.Drawing.Size(214, 19);
             this.checkTimeShiftSubFolder.TabIndex = 8;
-            this.checkTimeShiftSubFolder.Text = "チャンネルごとにサブフォルダーを作る(&C)";
+            this.checkTimeShiftSubFolder.Text = "チャンネルごとにサブ フォルダーを作る(&C)";
             this.checkTimeShiftSubFolder.UseVisualStyleBackColor = true;
             // 
             // buttonTimeShiftSaveToFolder
@@ -496,6 +514,126 @@ namespace JkTsGetterTool
             this.dateTimeShiftDate.Size = new System.Drawing.Size(130, 23);
             this.dateTimeShiftDate.TabIndex = 1;
             // 
+            // tabPageTool
+            // 
+            this.tabPageTool.Controls.Add(this.buttonToolMerge);
+            this.tabPageTool.Controls.Add(this.buttonToolSaveTo);
+            this.tabPageTool.Controls.Add(this.buttonToolXml2);
+            this.tabPageTool.Controls.Add(this.buttonToolXml1);
+            this.tabPageTool.Controls.Add(this.textToolSaveTo);
+            this.tabPageTool.Controls.Add(this.labelToolSaveTo);
+            this.tabPageTool.Controls.Add(this.textToolXml2);
+            this.tabPageTool.Controls.Add(this.labelToolXml2);
+            this.tabPageTool.Controls.Add(this.textToolXml1);
+            this.tabPageTool.Controls.Add(this.labelToolXml1);
+            this.tabPageTool.Location = new System.Drawing.Point(4, 24);
+            this.tabPageTool.Name = "tabPageTool";
+            this.tabPageTool.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTool.Size = new System.Drawing.Size(328, 328);
+            this.tabPageTool.TabIndex = 3;
+            this.tabPageTool.Text = "ツール";
+            this.tabPageTool.UseVisualStyleBackColor = true;
+            // 
+            // buttonToolMerge
+            // 
+            this.buttonToolMerge.Location = new System.Drawing.Point(17, 106);
+            this.buttonToolMerge.Name = "buttonToolMerge";
+            this.buttonToolMerge.Size = new System.Drawing.Size(297, 23);
+            this.buttonToolMerge.TabIndex = 13;
+            this.buttonToolMerge.Text = "2つのコメントxmlファイルをマージする(&M)";
+            this.buttonToolMerge.UseVisualStyleBackColor = true;
+            this.buttonToolMerge.Click += new System.EventHandler(this.buttonToolMerge_Click);
+            // 
+            // buttonToolSaveTo
+            // 
+            this.buttonToolSaveTo.Location = new System.Drawing.Point(283, 77);
+            this.buttonToolSaveTo.Name = "buttonToolSaveTo";
+            this.buttonToolSaveTo.Size = new System.Drawing.Size(30, 23);
+            this.buttonToolSaveTo.TabIndex = 12;
+            this.buttonToolSaveTo.Tag = "textToolSaveTo";
+            this.buttonToolSaveTo.Text = "...";
+            this.buttonToolSaveTo.UseVisualStyleBackColor = true;
+            this.buttonToolSaveTo.Click += new System.EventHandler(this.buttonToolSaveTo_Click);
+            // 
+            // buttonToolXml2
+            // 
+            this.buttonToolXml2.Location = new System.Drawing.Point(283, 48);
+            this.buttonToolXml2.Name = "buttonToolXml2";
+            this.buttonToolXml2.Size = new System.Drawing.Size(30, 23);
+            this.buttonToolXml2.TabIndex = 11;
+            this.buttonToolXml2.Tag = "textToolXml2";
+            this.buttonToolXml2.Text = "...";
+            this.buttonToolXml2.UseVisualStyleBackColor = true;
+            this.buttonToolXml2.Click += new System.EventHandler(this.buttonToolXml2_Click);
+            // 
+            // buttonToolXml1
+            // 
+            this.buttonToolXml1.Location = new System.Drawing.Point(283, 19);
+            this.buttonToolXml1.Name = "buttonToolXml1";
+            this.buttonToolXml1.Size = new System.Drawing.Size(30, 23);
+            this.buttonToolXml1.TabIndex = 10;
+            this.buttonToolXml1.Tag = "textToolXml1";
+            this.buttonToolXml1.Text = "...";
+            this.buttonToolXml1.UseVisualStyleBackColor = true;
+            this.buttonToolXml1.Click += new System.EventHandler(this.buttonToolXml1_Click);
+            // 
+            // textToolSaveTo
+            // 
+            this.textToolSaveTo.AllowDrop = true;
+            this.textToolSaveTo.Location = new System.Drawing.Point(103, 77);
+            this.textToolSaveTo.Name = "textToolSaveTo";
+            this.textToolSaveTo.Size = new System.Drawing.Size(175, 23);
+            this.textToolSaveTo.TabIndex = 9;
+            this.textToolSaveTo.DragDrop += new System.Windows.Forms.DragEventHandler(this.textSaveTo_DragDrop);
+            this.textToolSaveTo.DragEnter += new System.Windows.Forms.DragEventHandler(this.textSaveTo_DragEnter);
+            // 
+            // labelToolSaveTo
+            // 
+            this.labelToolSaveTo.AutoSize = true;
+            this.labelToolSaveTo.Location = new System.Drawing.Point(14, 80);
+            this.labelToolSaveTo.Name = "labelToolSaveTo";
+            this.labelToolSaveTo.Size = new System.Drawing.Size(61, 15);
+            this.labelToolSaveTo.TabIndex = 8;
+            this.labelToolSaveTo.Text = "保存先(&T)";
+            // 
+            // textToolXml2
+            // 
+            this.textToolXml2.AllowDrop = true;
+            this.textToolXml2.Location = new System.Drawing.Point(103, 48);
+            this.textToolXml2.Name = "textToolXml2";
+            this.textToolXml2.Size = new System.Drawing.Size(175, 23);
+            this.textToolXml2.TabIndex = 7;
+            this.textToolXml2.DragDrop += new System.Windows.Forms.DragEventHandler(this.textToolXml1_DragDrop);
+            this.textToolXml2.DragEnter += new System.Windows.Forms.DragEventHandler(this.textToolXml1_DragEnter);
+            // 
+            // labelToolXml2
+            // 
+            this.labelToolXml2.AutoSize = true;
+            this.labelToolXml2.Location = new System.Drawing.Point(14, 51);
+            this.labelToolXml2.Name = "labelToolXml2";
+            this.labelToolXml2.Size = new System.Drawing.Size(80, 15);
+            this.labelToolXml2.TabIndex = 6;
+            this.labelToolXml2.Text = "xmlファイル(&2)";
+            // 
+            // textToolXml1
+            // 
+            this.textToolXml1.AllowDrop = true;
+            this.textToolXml1.Location = new System.Drawing.Point(103, 19);
+            this.textToolXml1.Name = "textToolXml1";
+            this.textToolXml1.Size = new System.Drawing.Size(175, 23);
+            this.textToolXml1.TabIndex = 5;
+            this.textToolXml1.DragDrop += new System.Windows.Forms.DragEventHandler(this.textToolXml1_DragDrop);
+            this.textToolXml1.DragEnter += new System.Windows.Forms.DragEventHandler(this.textToolXml1_DragEnter);
+            // 
+            // labelToolXml1
+            // 
+            this.labelToolXml1.AutoSize = true;
+            this.labelToolXml1.Location = new System.Drawing.Point(14, 22);
+            this.labelToolXml1.Name = "labelToolXml1";
+            this.labelToolXml1.Size = new System.Drawing.Size(80, 15);
+            this.labelToolXml1.TabIndex = 4;
+            this.labelToolXml1.Text = "xmlファイル(&1)";
+            // 
             // tabPageEtc
             // 
             this.tabPageEtc.Controls.Add(this.label1);
@@ -512,6 +650,16 @@ namespace JkTsGetterTool
             this.tabPageEtc.TabIndex = 2;
             this.tabPageEtc.Text = "その他";
             this.tabPageEtc.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(60, 123);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(206, 60);
+            this.label1.TabIndex = 23;
+            this.label1.Text = "[使い方のヒント]\r\n「過去ログ取得」「タイムシフト取得」タブに\r\n.ts ファイルをドラッグ&ドロップすると、\r\nファイルからチャンネル、日時を取得します。\r\n" +
+    "";
             // 
             // labelAbout
             // 
@@ -537,7 +685,7 @@ namespace JkTsGetterTool
             this.buttonOpenGitHub.Name = "buttonOpenGitHub";
             this.buttonOpenGitHub.Size = new System.Drawing.Size(297, 23);
             this.buttonOpenGitHub.TabIndex = 20;
-            this.buttonOpenGitHub.Text = "github.com/sasukekinniku/JkTsGetterTool";
+            this.buttonOpenGitHub.Text = "github.com/sasukekinniku/JkTsGetter";
             this.buttonOpenGitHub.UseVisualStyleBackColor = true;
             this.buttonOpenGitHub.Click += new System.EventHandler(this.buttonOpenGitHub_Click);
             // 
@@ -575,159 +723,11 @@ namespace JkTsGetterTool
             // 
             this.saveFileDialog.Filter = "ニコニコ実況 コメント ファイル|*.xml; *.nicojk; *.jkl|すべてのファイル|*.*";
             // 
-            // labelSeparator2
-            // 
-            this.labelSeparator2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.labelSeparator2.Location = new System.Drawing.Point(16, 265);
-            this.labelSeparator2.Name = "labelSeparator2";
-            this.labelSeparator2.Size = new System.Drawing.Size(296, 1);
-            this.labelSeparator2.TabIndex = 11;
-            // 
-            // buttonTimeShiftUpdateCache
-            // 
-            this.buttonTimeShiftUpdateCache.Location = new System.Drawing.Point(15, 285);
-            this.buttonTimeShiftUpdateCache.Name = "buttonTimeShiftUpdateCache";
-            this.buttonTimeShiftUpdateCache.Size = new System.Drawing.Size(297, 23);
-            this.buttonTimeShiftUpdateCache.TabIndex = 12;
-            this.buttonTimeShiftUpdateCache.Text = "キャッシュ フォルダーに全局の全タイムシフトをダウンロード(&H)";
-            this.buttonTimeShiftUpdateCache.UseVisualStyleBackColor = true;
-            this.buttonTimeShiftUpdateCache.Click += new System.EventHandler(this.buttonTimeShiftUpdateCache_Click);
-            // 
-            // tabPageTool
-            // 
-            this.tabPageTool.Controls.Add(this.buttonToolMerge);
-            this.tabPageTool.Controls.Add(this.buttonToolSaveTo);
-            this.tabPageTool.Controls.Add(this.buttonToolXml2);
-            this.tabPageTool.Controls.Add(this.buttonToolXml1);
-            this.tabPageTool.Controls.Add(this.textToolSaveTo);
-            this.tabPageTool.Controls.Add(this.labelToolSaveTo);
-            this.tabPageTool.Controls.Add(this.textToolXml2);
-            this.tabPageTool.Controls.Add(this.labelToolXml2);
-            this.tabPageTool.Controls.Add(this.textToolXml1);
-            this.tabPageTool.Controls.Add(this.labelToolXml1);
-            this.tabPageTool.Location = new System.Drawing.Point(4, 24);
-            this.tabPageTool.Name = "tabPageTool";
-            this.tabPageTool.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTool.Size = new System.Drawing.Size(328, 328);
-            this.tabPageTool.TabIndex = 3;
-            this.tabPageTool.Text = "ツール";
-            this.tabPageTool.UseVisualStyleBackColor = true;
-            // 
-            // textToolXml1
-            // 
-            this.textToolXml1.AllowDrop = true;
-            this.textToolXml1.Location = new System.Drawing.Point(103, 19);
-            this.textToolXml1.Name = "textToolXml1";
-            this.textToolXml1.Size = new System.Drawing.Size(175, 23);
-            this.textToolXml1.TabIndex = 5;
-            this.textToolXml1.DragDrop += new System.Windows.Forms.DragEventHandler(this.textToolXml1_DragDrop);
-            this.textToolXml1.DragEnter += new System.Windows.Forms.DragEventHandler(this.textToolXml1_DragEnter);
-            // 
-            // labelToolXml1
-            // 
-            this.labelToolXml1.AutoSize = true;
-            this.labelToolXml1.Location = new System.Drawing.Point(14, 22);
-            this.labelToolXml1.Name = "labelToolXml1";
-            this.labelToolXml1.Size = new System.Drawing.Size(80, 15);
-            this.labelToolXml1.TabIndex = 4;
-            this.labelToolXml1.Text = "xmlファイル(&1)";
-            // 
-            // textToolXml2
-            // 
-            this.textToolXml2.AllowDrop = true;
-            this.textToolXml2.Location = new System.Drawing.Point(103, 48);
-            this.textToolXml2.Name = "textToolXml2";
-            this.textToolXml2.Size = new System.Drawing.Size(175, 23);
-            this.textToolXml2.TabIndex = 7;
-            this.textToolXml2.DragDrop += new System.Windows.Forms.DragEventHandler(this.textToolXml1_DragDrop);
-            this.textToolXml2.DragEnter += new System.Windows.Forms.DragEventHandler(this.textToolXml1_DragEnter);
-            // 
-            // labelToolXml2
-            // 
-            this.labelToolXml2.AutoSize = true;
-            this.labelToolXml2.Location = new System.Drawing.Point(14, 51);
-            this.labelToolXml2.Name = "labelToolXml2";
-            this.labelToolXml2.Size = new System.Drawing.Size(80, 15);
-            this.labelToolXml2.TabIndex = 6;
-            this.labelToolXml2.Text = "xmlファイル(&2)";
-            // 
-            // textToolSaveTo
-            // 
-            this.textToolSaveTo.AllowDrop = true;
-            this.textToolSaveTo.Location = new System.Drawing.Point(103, 77);
-            this.textToolSaveTo.Name = "textToolSaveTo";
-            this.textToolSaveTo.Size = new System.Drawing.Size(175, 23);
-            this.textToolSaveTo.TabIndex = 9;
-            this.textToolSaveTo.DragDrop += new System.Windows.Forms.DragEventHandler(this.textSaveTo_DragDrop);
-            this.textToolSaveTo.DragEnter += new System.Windows.Forms.DragEventHandler(this.textSaveTo_DragEnter);
-            // 
-            // labelToolSaveTo
-            // 
-            this.labelToolSaveTo.AutoSize = true;
-            this.labelToolSaveTo.Location = new System.Drawing.Point(14, 80);
-            this.labelToolSaveTo.Name = "labelToolSaveTo";
-            this.labelToolSaveTo.Size = new System.Drawing.Size(61, 15);
-            this.labelToolSaveTo.TabIndex = 8;
-            this.labelToolSaveTo.Text = "保存先(&T)";
-            // 
-            // buttonToolXml1
-            // 
-            this.buttonToolXml1.Location = new System.Drawing.Point(283, 19);
-            this.buttonToolXml1.Name = "buttonToolXml1";
-            this.buttonToolXml1.Size = new System.Drawing.Size(30, 23);
-            this.buttonToolXml1.TabIndex = 10;
-            this.buttonToolXml1.Tag = "textToolXml1";
-            this.buttonToolXml1.Text = "...";
-            this.buttonToolXml1.UseVisualStyleBackColor = true;
-            this.buttonToolXml1.Click += new System.EventHandler(this.buttonToolXml1_Click);
-            // 
-            // buttonToolXml2
-            // 
-            this.buttonToolXml2.Location = new System.Drawing.Point(283, 48);
-            this.buttonToolXml2.Name = "buttonToolXml2";
-            this.buttonToolXml2.Size = new System.Drawing.Size(30, 23);
-            this.buttonToolXml2.TabIndex = 11;
-            this.buttonToolXml2.Tag = "textToolXml2";
-            this.buttonToolXml2.Text = "...";
-            this.buttonToolXml2.UseVisualStyleBackColor = true;
-            this.buttonToolXml2.Click += new System.EventHandler(this.buttonToolXml2_Click);
-            // 
-            // buttonToolSaveTo
-            // 
-            this.buttonToolSaveTo.Location = new System.Drawing.Point(283, 77);
-            this.buttonToolSaveTo.Name = "buttonToolSaveTo";
-            this.buttonToolSaveTo.Size = new System.Drawing.Size(30, 23);
-            this.buttonToolSaveTo.TabIndex = 12;
-            this.buttonToolSaveTo.Tag = "textToolSaveTo";
-            this.buttonToolSaveTo.Text = "...";
-            this.buttonToolSaveTo.UseVisualStyleBackColor = true;
-            this.buttonToolSaveTo.Click += new System.EventHandler(this.buttonToolSaveTo_Click);
-            // 
-            // buttonToolMerge
-            // 
-            this.buttonToolMerge.Location = new System.Drawing.Point(17, 106);
-            this.buttonToolMerge.Name = "buttonToolMerge";
-            this.buttonToolMerge.Size = new System.Drawing.Size(297, 23);
-            this.buttonToolMerge.TabIndex = 13;
-            this.buttonToolMerge.Text = "2つのコメントxmlファイルをマージする(&M)";
-            this.buttonToolMerge.UseVisualStyleBackColor = true;
-            this.buttonToolMerge.Click += new System.EventHandler(this.buttonToolMerge_Click);
-            // 
             // openFileDialog
             // 
             this.openFileDialog.DefaultExt = "xml";
             this.openFileDialog.FileName = "openFileDialog1";
             this.openFileDialog.Filter = "ニコニコ実況 コメント ファイル|*.xml; *.nicojk; *.jkl|すべてのファイル|*.*";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(60, 123);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(206, 60);
-            this.label1.TabIndex = 23;
-            this.label1.Text = "[使い方のヒント]\r\n「過去ログ取得」「タイムシフト取得」タブに\r\n.ts ファイルをドラッグ&ドロップすると、\r\nファイルからチャンネル、日時を取得します。\r\n" +
-    "";
             // 
             // FormMain
             // 
@@ -752,10 +752,10 @@ namespace JkTsGetterTool
             this.tabPagePastLog.PerformLayout();
             this.tabPageTimeShift.ResumeLayout(false);
             this.tabPageTimeShift.PerformLayout();
-            this.tabPageEtc.ResumeLayout(false);
-            this.tabPageEtc.PerformLayout();
             this.tabPageTool.ResumeLayout(false);
             this.tabPageTool.PerformLayout();
+            this.tabPageEtc.ResumeLayout(false);
+            this.tabPageEtc.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

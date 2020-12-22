@@ -127,7 +127,7 @@ JkTsGetterTool.exe は、コマンドライン操作をしなくてもGUI操作�
 ## 最新版
 このツールの最新版は以下で頒布しています。
 
-https://github.com/sasukekinniku/JkTsGetterTool
+https://github.com/sasukekinniku/JkTsGetter
 
 ## 更新履歴
 

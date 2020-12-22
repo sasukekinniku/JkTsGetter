@@ -249,7 +249,7 @@ namespace JkTsGetterTool
 
         private void buttonOpenGitHub_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/sasukekinniku/JkTsGetterTool");
+            System.Diagnostics.Process.Start("https://github.com/sasukekinniku/JkTsGetter");
         }
 
         private void buttonJkTsGetterAbout_Click(object sender, EventArgs e)

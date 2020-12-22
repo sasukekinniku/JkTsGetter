@@ -62,7 +62,7 @@ namespace JkTsGetter
 
                     Console.WriteLine($"{ver.ProductName} {ver.ProductVersion}");
                     Console.WriteLine("ニコニコ実況のニコ生、ニコニコ実況過去ログAPI から過去ログを取得するコマンドラインツール");
-                    Console.WriteLine("https://github.com/sasukekinniku/JkTsGetterTool");
+                    Console.WriteLine("https://github.com/sasukekinniku/JkTsGetter");
                     Console.WriteLine("");
                     Console.WriteLine("Usage:");
                     Console.WriteLine("  JkTsGetter チャンネル 取得開始日時 取得終了日時 [オプション...]");
