@@ -42,10 +42,10 @@ namespace JkTsGetter
 
         static int Main(string[] args)
         {
-#if CATCH_EXCEPTION
+#if !DEBUG
             try
-            {
 #endif
+            {
                 var getter = new JkTsGetter();
                 // getter.GetTimeShiftComment(getter.GetChannel(1), 2020, 12, 17);
                 // getter.Execute();
@@ -111,54 +111,60 @@ namespace JkTsGetter
                     return 0;
                 }
 
-                getter.Param.OutputFileName = argMap.GetOption("-f")?.Trim('\"');
+                getter.Param.OutputFileName = argMap.GetOption("-f")?.Trim('\"') ?? "";
                 getter.Param.CreateDirectory = argMap.HasSwitch("-d");
                 getter.Param.OverWrite = !argMap.HasSwitch("-v");
                 getter.Param.AlwaysOldApi = argMap.HasSwitch("-old");
+
+                if (System.IO.Path.GetExtension(getter.Param.OutputFileName).ToLower() == (".ts"))
+                {
+                    Console.WriteLine("出力先に間違えて ts ファイルが指定されているようです");
+                    return -1;
+                }
 
                 if (argMap.HasSwitch("-all"))
                 {
                     getter.ExecuteAllTsGet(argMap.HasSwitch("-cache"));
                 }
-            else if (argMap.HasSwitch("-ts"))
-            {
-                if (args.Length < 2)
+                else if (argMap.HasSwitch("-ts"))
                 {
-                    Console.WriteLine("パラメーター指定が正しくありません");
-                    return -1;
+                    if (args.Length < 2)
+                    {
+                        Console.WriteLine("パラメーター指定が正しくありません");
+                        return -1;
+                    }
+
+                    var jk = ParseJkChannel(args[0]);
+                    var date = ParseDate(args[1]);
+
+                    if (jk <= 0 || jk > 10000)
+                    {
+                        Console.WriteLine("チャンネル指定が正しくありません");
+                        return -1;
+                    }
+
+                    if (date < JkTsGetter.NewJkStartDateTime || date.Year > 2099)
+                    {
+                        Console.WriteLine("日時が正しくありません (-ts モードでは取得する日付を yyyymmdd 形式の8桁で指定してください)");
+                        return -1;
+                    }
+
+                    getter.GetTimeShiftComment(jk, date.Year, date.Month, date.Day);
                 }
-
-                var jk = ParseJkChannel(args[0]);
-                var date = ParseDate(args[1]);
-
-                if (jk <= 0 || jk > 10000)
+                else if (argMap.HasSwitch("-merge"))
                 {
-                    Console.WriteLine("チャンネル指定が正しくありません");
-                    return -1;
+                    if (args.Length < 2)
+                    {
+                        Console.WriteLine("パラメーター指定が正しくありません");
+                        return -1;
+                    }
+
+                    var mergeFile1 = args[0]?.Trim('\"');
+                    var mergeFile2 = args[1]?.Trim('\"');
+
+                    return getter.MergeCommentFile(mergeFile1, mergeFile2) ? 0 : -1;
                 }
-
-                if (date < JkTsGetter.NewJkStartDateTime || date.Year > 2099)
-                {
-                    Console.WriteLine("日時が正しくありません (-ts モードでは取得する日付を yyyymmdd 形式の8桁で指定してください)");
-                    return -1;
-                }
-
-                getter.GetTimeShiftComment(jk, date.Year, date.Month, date.Day);
-            }
-            else if (argMap.HasSwitch("-merge"))
-            {
-                if (args.Length < 2)
-                {
-                    Console.WriteLine("パラメーター指定が正しくありません");
-                    return -1;
-                }
-
-                var mergeFile1 = args[0]?.Trim('\"');
-                var mergeFile2 = args[1]?.Trim('\"');
-
-                return getter.MergeCommentFile(mergeFile1, mergeFile2) ? 0 : -1;
-            }
-            else if (System.IO.File.Exists(args[0]) && args[0].ToLower().EndsWith(".ts"))
+                else if (System.IO.File.Exists(args[0]) && args[0].ToLower().EndsWith(".ts"))
                 {
                     var fileName = args[0]?.Trim('\"');
                     Console.WriteLine("tsファイルから番組情報を読み取ります");
@@ -239,8 +245,8 @@ namespace JkTsGetter
                     getter.ExecuteGetterTimeRange(jk, startTime, endTime);
                 }
                 return 0;
-#if CATCH_EXCEPTION
             }
+#if !DEBUG
             catch (Exception e)
             {
                 Console.WriteLine($"エラー {e.GetType().FullName} が {e.TargetSite} で発生しました。");

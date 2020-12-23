@@ -12,7 +12,8 @@ namespace JkTsGetterTool
 {
     public partial class FormExecute : Form
     {
-        System.Diagnostics.Process Executing = null;
+        System.Diagnostics.Process _executing = null;
+        bool _closed = false;
 
         public FormExecute()
         {
@@ -45,7 +46,7 @@ namespace JkTsGetterTool
 
             //起動
             p.Start();
-            Executing = p;
+            _executing = p;
 
             //非同期で出力とエラーの読み取りを開始
             p.BeginOutputReadLine();
@@ -76,7 +77,7 @@ namespace JkTsGetterTool
             if (textBoxLogs.InvokeRequired)
             {
                 this.Invoke((MethodInvoker)(() => textBoxLogs.AppendText(e.Data + "\r\n")));
-                this.Invoke((MethodInvoker)(() => Executing = null));
+                this.Invoke((MethodInvoker)(() => _executing = null));
             }
             else
             {
@@ -86,7 +87,9 @@ namespace JkTsGetterTool
 
         void p_Exited(object sender, EventArgs e)
         {
-            Executing?.WaitForExit();
+            if (_closed) { return; }
+
+            _executing?.WaitForExit();
 
             string str = "[ 完了しました ]";
             if (((System.Diagnostics.Process)sender).ExitCode != 0)
@@ -96,28 +99,31 @@ namespace JkTsGetterTool
             if (textBoxLogs.InvokeRequired)
             {
                 this.Invoke((MethodInvoker)(() => textBoxLogs.AppendText("\r\n" + str + "\r\n")));
-                this.Invoke((MethodInvoker)(() => Executing = null));
+                this.Invoke((MethodInvoker)(() => _executing = null));
             }
             else
             {
                 textBoxLogs.AppendText("\r\n" + str + "\r\n");
-                Executing = null;
+                _executing.Exited -= p_Exited;
+                _executing = null;
             }
         }
 
         private void FormExecute_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (Executing != null)
+            _closed = true;
+
+            if (_executing != null)
             {
-                Executing.Exited -= p_Exited;
-                Executing.Kill();
-                Executing = null;
+                _executing.Exited -= p_Exited;
+                _executing.Kill();
+                _executing = null;
             }
         }
 
         private void FormExecute_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Executing != null)
+            if (_executing != null)
             {
                 if (MessageBox.Show(this, "まだ処理中です。この処理を中断しますか?", "処理ウインドウ", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 {

@@ -104,13 +104,28 @@ namespace JkTsGetterTool
             }
         }
 
+        private bool OverWriteCheck(string fileName)
+        {
+            if (System.IO.File.Exists(fileName))
+            {
+                if (MessageBox.Show(this, fileName + " はすでに存在します。\r\n\r\n上書きしてもよろしいですか?", "コメントファイル上書きの確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private void buttonPastLogDownload_Click(object sender, EventArgs e)
         {
+            string fileName = textSaveTo.Text;
+            if (!OverWriteCheck(fileName)) { return; }
+
             JkTsGetter.Channel channel = JkTsGetter.Channel.Channels[comboChannels.SelectedIndex];
             string param = $"jk{channel.jk} {dateStartDate.Value.ToString("yyyyMMdd")}{dateStartTime.Value.ToString("HHmmss")} {dateEndDate.Value.ToString("yyyyMMdd")}{dateEndTime.Value.ToString("HHmmss")}";
-            if (!string.IsNullOrEmpty(textSaveTo.Text))
+            if (!string.IsNullOrEmpty(fileName))
             {
-                param += $" -f \"{textSaveTo.Text}\"";
+                param += $" -f \"{fileName}\"";
             }
             if (checkBoxAlwaysAPI.Checked)
             {
@@ -166,11 +181,14 @@ namespace JkTsGetterTool
 
         private void buttonTimeShiftDownload_Click(object sender, EventArgs e)
         {
+            string fileName = textTimeShiftSaveTo.Text;
+            if (!OverWriteCheck(fileName)) { return; }
+
             JkTsGetter.Channel channel = JkTsGetter.Channel.Channels[comboChannels.SelectedIndex];
             string param = $"jk{channel.jk} {dateTimeShiftDate.Value.ToString("yyyyMMdd")} -ts";
-            if (!string.IsNullOrEmpty(textTimeShiftSaveTo.Text))
+            if (!string.IsNullOrEmpty(fileName))
             {
-                param += $" -f \"{textTimeShiftSaveTo.Text}\"";
+                param += $" -f \"{fileName}\"";
             }
 
             var formExecute = new FormExecute();
@@ -179,6 +197,9 @@ namespace JkTsGetterTool
 
         private void buttonTimeShiftAlllDownload_Click(object sender, EventArgs e)
         {
+            string fileName = textTimeShiftSaveTo.Text;
+            if (!OverWriteCheck(fileName)) { return; }
+
             string param = $"-all";
             if (checkTimeShiftSubFolder.Checked)
             {
@@ -188,9 +209,9 @@ namespace JkTsGetterTool
             {
                 param += " -v";
             }
-            if (!string.IsNullOrEmpty(textTimeShiftSaveTo.Text))
+            if (!string.IsNullOrEmpty(fileName))
             {
-                param += $" -f \"{textTimeShiftSaveTo.Text}\"";
+                param += $" -f \"{fileName}\"";
             }
 
             var formExecute = new FormExecute();
@@ -290,10 +311,13 @@ namespace JkTsGetterTool
 
         private void buttonToolMerge_Click(object sender, EventArgs e)
         {
+            string fileName = textToolSaveTo.Text;
+            if (!OverWriteCheck(fileName)) { return; }
+
             string param = $"{textToolXml1.Text} {textToolXml2.Text} -merge";
-            if (!string.IsNullOrEmpty(textToolSaveTo.Text))
+            if (!string.IsNullOrEmpty(fileName))
             {
-                param += $" -f \"{textToolSaveTo.Text}\"";
+                param += $" -f \"{fileName}\"";
             }
 
             var formExecute = new FormExecute();
@@ -352,9 +376,16 @@ namespace JkTsGetterTool
             e.Effect = DragDropEffects.None;
 
             //コントロール内にドラッグされたとき実行される
-            if (e.Data.GetDataPresent(DataFormats.FileDrop ))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                e.Effect = DragDropEffects.Copy;
+                //コントロール内にドロップされたとき実行される
+                string[] fileName = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+                string[] acceptExts = { ".xml", ".nicojk", ".jkl", ".txt" };
+
+                if (System.IO.Directory.Exists(fileName[0]) || Array.IndexOf(acceptExts, System.IO.Path.GetExtension(fileName[0]).ToLower()) >= 0)
+                {
+                    e.Effect = DragDropEffects.Copy;
+                }
             }
         }
 
