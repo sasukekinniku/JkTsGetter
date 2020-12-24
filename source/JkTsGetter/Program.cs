@@ -97,7 +97,7 @@ namespace JkTsGetter
                     Console.WriteLine("            出力する場所やファイル名を指定する");
                     Console.WriteLine("  -d        チャンネル名と同じ名前のサブフォルダを作成し、その中に保存する");
                     Console.WriteLine("  -v        保存したいファイルと同名のファイルがある場合に上書きしない");
-                    Console.WriteLine("  -old      日時にかかわらず、つねにニコニコ実況過去ログAPIから取りに行く");
+                    Console.WriteLine("  -api      日時にかかわらず、つねにニコニコ実況過去ログAPIから取りに行く");
                     Console.WriteLine("");
                     Console.WriteLine("チャンネルリスト:");
                     foreach (var ch in Channel.Channels)
@@ -114,7 +114,7 @@ namespace JkTsGetter
                 getter.Param.OutputFileName = argMap.GetOption("-f")?.Trim('\"') ?? "";
                 getter.Param.CreateDirectory = argMap.HasSwitch("-d");
                 getter.Param.OverWrite = !argMap.HasSwitch("-v");
-                getter.Param.AlwaysOldApi = argMap.HasSwitch("-old");
+                getter.Param.AlwaysOldApi = argMap.HasSwitch("-api");
 
                 if (System.IO.Path.GetExtension(getter.Param.OutputFileName).ToLower() == (".ts"))
                 {

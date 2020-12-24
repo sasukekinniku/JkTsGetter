@@ -146,7 +146,7 @@ namespace JkTsGetter
             // 出力ファイル名を取得
             public string GetOutputPath(int jk, string defaultName = "")
             {
-                string outputPath = OutputFileName == null ? "" : OutputFileName.EndsWith(@"\") ? OutputFileName : Path.GetDirectoryName(OutputFileName);
+                string outputPath = string.IsNullOrEmpty(OutputFileName) ? "" : OutputFileName.EndsWith(@"\") ? OutputFileName : Path.GetDirectoryName(OutputFileName);
                 string outputName = Path.GetFileName(OutputFileName);
 
                 if (Directory.Exists(OutputFileName))

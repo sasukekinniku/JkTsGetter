@@ -17,6 +17,10 @@ namespace JkTsGetterTool
         public FormMain()
         {
             InitializeComponent();
+
+            this.Icon = Properties.Resources.JkTsGetterTool;
+
+            pictureBox1.Image = Properties.Resources.JkTsGetterTool.ToBitmap();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -368,7 +372,7 @@ namespace JkTsGetterTool
         private void comboChannels_SelectedIndexChanged(object sender, EventArgs e)
         {
             JkTsGetter.Channel channel = JkTsGetter.Channel.Channels[comboChannels.SelectedIndex];
-            buttonOpenTimeShiftBrowser.Enabled = buttonTimeShiftDownload.Enabled = buttonOpenNicoJkTop.Enabled = buttonOpenChannelTop.Enabled = buttonOpenChannelLive.Enabled = (channel.ch > 0);
+            buttonOpenTimeShiftBrowser.Enabled = buttonTimeShiftDownload.Enabled = buttonOpenChannelTop.Enabled = buttonOpenChannelLive.Enabled = (channel.ch > 0);
         }
 
         private void textSaveTo_DragEnter(object sender, DragEventArgs e)

@@ -88,11 +88,13 @@ namespace JkTsGetterTool
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControlMain.SuspendLayout();
             this.tabPagePastLog.SuspendLayout();
             this.tabPageTimeShift.SuspendLayout();
             this.tabPageTool.SuspendLayout();
             this.tabPageEtc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // labelChannel
@@ -636,6 +638,7 @@ namespace JkTsGetterTool
             // 
             // tabPageEtc
             // 
+            this.tabPageEtc.Controls.Add(this.pictureBox1);
             this.tabPageEtc.Controls.Add(this.label1);
             this.tabPageEtc.Controls.Add(this.labelAbout);
             this.tabPageEtc.Controls.Add(this.buttonJkTsGetterAbout);
@@ -663,9 +666,9 @@ namespace JkTsGetterTool
             // 
             // labelAbout
             // 
-            this.labelAbout.Location = new System.Drawing.Point(17, 225);
+            this.labelAbout.Location = new System.Drawing.Point(63, 218);
             this.labelAbout.Name = "labelAbout";
-            this.labelAbout.Size = new System.Drawing.Size(297, 19);
+            this.labelAbout.Size = new System.Drawing.Size(251, 19);
             this.labelAbout.TabIndex = 22;
             this.labelAbout.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -729,6 +732,14 @@ namespace JkTsGetterTool
             this.openFileDialog.FileName = "openFileDialog1";
             this.openFileDialog.Filter = "ニコニコ実況 コメント ファイル|*.xml; *.nicojk; *.jkl|すべてのファイル|*.*";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(17, 212);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox1.TabIndex = 24;
+            this.pictureBox1.TabStop = false;
+            // 
             // FormMain
             // 
             this.AllowDrop = true;
@@ -756,6 +767,7 @@ namespace JkTsGetterTool
             this.tabPageTool.PerformLayout();
             this.tabPageEtc.ResumeLayout(false);
             this.tabPageEtc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -822,6 +834,7 @@ namespace JkTsGetterTool
         private System.Windows.Forms.Label labelToolXml1;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
