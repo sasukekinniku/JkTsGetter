@@ -49,8 +49,13 @@ namespace JkTsGetter
 
             try
             {
-                var request = HttpWebRequest.Create(url);
+                System.Diagnostics.FileVersionInfo ver =
+                    System.Diagnostics.FileVersionInfo.GetVersionInfo(
+                    System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+                var request = (HttpWebRequest)HttpWebRequest.Create(url);
                 request.Timeout = 15000;
+                request.UserAgent = $"{ver.ProductName}/{ver.ProductVersion}";
                 var response = (HttpWebResponse)request.GetResponse();
                 Stream stream = response.GetResponseStream();
                 if (stream != null)
