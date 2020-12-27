@@ -120,7 +120,7 @@ JkTsGetterTool.exe は、コマンドライン操作をしなくてもGUI操作�
 ニコニコ実況のサイトを開いたり、このツールのバージョン情報が載っていたりします。
 
 ## 謝辞
-以下のコードを使用、または参考にさせていただきました。
+以下のコードを使用、または参考にさせていただきました。ありがとうございます。
 
 - mik-claire/MikLib の ArgumentMap https://github.com/mik-claire/MikLib
 - IniFile 読み込みクラス https://note.dokeep.jp/post/csharp-inifile-read/
@@ -135,6 +135,9 @@ JkTsGetterTool.exe は、コマンドライン操作をしなくてもGUI操作�
 https://github.com/sasukekinniku/JkTsGetter
 
 ## 更新履歴
+
+### Ver.1.0.0.3 (2020/12/27)
+- 通信時にツール名とバージョンを User-Agent として送信するようにした
 
 ### Ver.1.0.0.2 (2020/12/24)
 - アプリケーションのアイコンを追加した
