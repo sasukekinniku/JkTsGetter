@@ -97,14 +97,43 @@ namespace JkTsGetter
         }
 
         /// <summary>
-        /// チャンネルの生放送情報を取得
+        /// チャンネルの生放送情報を取得 (全ページ)
         /// </summary>
         /// <param name="channel"></param>
         /// <returns></returns>
         public static ChannelLiveInfo GetChannelLiveInfo(Channel channel)
         {
-            var resText = Util.GetHttpGet($"https://public.api.nicovideo.jp/v1/channel/channelapp/content/lives.json?page=1&channelId={channel.ch}");
-            return JsonSerializer.Deserialize<ChannelLiveInfo>(resText);
+            ChannelLiveInfo ret = GetChannelLiveInfo(channel, 1);
+
+            // 最大5ページ分まで取得する
+            for (int page = 2; page <= 5; page ++)
+            {
+                ChannelLiveInfo info = GetChannelLiveInfo(channel, page);
+                if (info != null)
+                {
+                    ret.data.items.AddRange(info.data.items);
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// チャンネルの生放送情報を取得 (1ページのみ)
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        public static ChannelLiveInfo GetChannelLiveInfo(Channel channel, int page)
+        {
+            var resText = Util.GetHttpGet($"https://public.api.nicovideo.jp/v1/channel/channelapp/content/lives.json?page={page}&channelId={channel.ch}");
+            try
+            {
+                return JsonSerializer.Deserialize<ChannelLiveInfo>(resText);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 
@@ -123,7 +152,7 @@ namespace JkTsGetter
             public string link { get; set; }
             public string guid { get; set; }
             public DateTimeOffset lastPublishedAt { get; set; }
-            public Item[] items { get; set; }
+            public List<Item> items { get; set; }
         }
 
         public class Item

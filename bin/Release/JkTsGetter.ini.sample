@@ -1,0 +1,28 @@
+; このファイルは設定ファイルのサンプルです。
+; JkTsGetter.ini に名前変更することで読み込まれます。
+
+[Config]
+; ニコ生新配信ツールの場所を指定
+GetterToolPath=".\ニコ生新配信録画ツール（仮.exe"
+
+; ニコ生新配信ツールでタイムシフトコメントを取得するときのパラメーターを指定
+GetterToolParam="-Isminimized=true -IscloseExit=true -IsgetComment=true -EngineMode=3 -fileNameType=10 -ts-start=0h0m0s -IscreateSubfolder=false -IsdefaultRecordDir=true"
+
+; ニコ生新配信ツールで追いかけ再生コメントを取得するときの追加のパラメーターを指定
+GetterToolParamChase="-IsArgChaseRecFromFirst=true IsChaseRecord=true -chase"
+
+; 旧ニコニコ実況 過去ログ API のURLを指定。{0} チャンネル番号、{1} 開始Unix時間、{2} 終了Unix時間
+GetterOldLogApiUrl="https://jikkyo.tsukumijima.net/api/kakolog/jk{0}?starttime={1}&endtime={2}&format=xml"
+
+; 旧ニコニコ実況で一度のAPIアクセスで取得する間隔。この間隔に分割して取得します
+; 72時間(3日)分が最大。仕様変更があったり、アクセスが不安定なときは減らすといいと思います
+GetterOldLogApiMaxHour=72
+
+; タイムシフトを取得したとき、キャッシュとして保存するフォルダ
+LogCachePath=".\Cache"
+
+; 取得したタイムシフトを LogCachePath にキャッシュとして保存する場合「true」を指定する
+; UseSaveToCache=true
+
+; キャッシュからタイムシフトを LogCachePath から再利用する場合「true」を指定する
+; UseLoadFromCache=true

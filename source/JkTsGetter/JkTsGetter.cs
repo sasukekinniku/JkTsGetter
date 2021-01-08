@@ -231,6 +231,11 @@ namespace JkTsGetter
                 Param.CreateDirectory = true;
                 Param.OverWrite = false;
                 Param.OutputFileName = Settings.Get().Config.LogCachePath;
+
+                if (!Directory.Exists(Settings.Get().Config.LogCachePath))
+                {
+                    Directory.CreateDirectory(Settings.Get().Config.LogCachePath);
+                }
             }
 
             foreach (var channel in Channel.Channels)
