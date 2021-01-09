@@ -143,7 +143,7 @@ namespace JkTsGetter
                         return -1;
                     }
 
-                    if (date < JkTsGetter.NewJkStartDateTime || date.Year > 2099)
+                    if (date.Year < 2020 || date.Year > 2099)
                     {
                         Console.WriteLine("日時が正しくありません (-ts モードでは取得する日付を yyyymmdd 形式の8桁で指定してください)");
                         return -1;

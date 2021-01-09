@@ -130,7 +130,25 @@ namespace JkTsGetter
             {
                 return JsonSerializer.Deserialize<ChannelLiveInfo>(resText);
             }
-            catch (Exception e)
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 指定IDのニコニコ生放送番組情報を取得
+        /// </summary>
+        /// <param name="lv"></param>
+        /// <returns></returns>
+        public static LiveProgramInfo GetLiveProgramInfo(int lv)
+        {
+            var resText = Util.GetHttpGet($"https://api.cas.nicovideo.jp/v1/services/live/programs/lv{lv}");
+            try
+            {
+                return JsonSerializer.Deserialize<LiveProgramInfo>(resText);
+            }
+            catch (Exception)
             {
                 return null;
             }
@@ -179,6 +197,81 @@ namespace JkTsGetter
                     if (pos < 0) { return -1; }
                     string idString = link.Substring(pos + "/watch/lv".Length);
                     return int.TryParse(idString, out int result) ? result : 0;
+                }
+            }
+        }
+
+        public Meta meta { get; set; }
+        public Data data { get; set; }
+    }
+
+    /// <summary>
+    /// ニコニコのAPIから取得する生放送番組情報
+    /// </summary>
+    public class LiveProgramInfo
+    {
+        public class Meta
+        {
+            public int status { get; set; }
+        }
+
+        public class Data
+        {
+            public TimeShift timeshift { get; set; }
+        }
+
+        public class TimeShift
+        {
+            public enum StatusDef
+            {
+                None,
+                Released,
+                BeforeRelease,
+                Expired,
+            };
+
+            public bool enabled { get; set; }
+            public string status { get; set; }
+
+            public bool Gettable
+            {
+                get
+                {
+                    return Status == StatusDef.Released;
+                }
+            }
+
+            public StatusDef Status
+            {
+                get
+                {
+                    switch (status)
+                    {
+                        case "released":
+                            return StatusDef.Released;
+                        case "before_release":
+                            return StatusDef.BeforeRelease;
+                        case "expired":
+                            return StatusDef.Expired;
+                    }
+                    return StatusDef.None;
+                }
+            }
+
+            public String ErrorMessage
+            {
+                get
+                {
+                    switch (Status)
+                    {
+                        case StatusDef.BeforeRelease:
+                            return "このタイムシフトは公開前です";
+                        case StatusDef.Expired:
+                            return "このタイムシフトは公開期間が終了しています";
+                        case StatusDef.None:
+                            return "このタイムシフトがありません";
+                    }
+                    return "";
                 }
             }
         }

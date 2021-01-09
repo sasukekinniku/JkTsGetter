@@ -14,29 +14,41 @@ namespace JkTsGetter
 {
     public class JkTsGetter
     {
+        // 新ニコニコ実況の開始日
+        public static readonly DateTime NewNicoJkSince = new DateTime(2020, 12, 16, 11, 00, 00);
+
         /// <summary>
         /// この時間を新ニコニコ実況開始の境目とする
         /// </summary>
-        private static DateTime? Now = null;
-        public static DateTime NewJkStartDateTime
+        public static DateTime NewJkBorderDateTime
         {
             get
             {
-                if (!Now.HasValue) { Now = DateTime.Now; };
+                var Now = DateTime.Now;
                 // Now = new DateTime(2021, 1, 9, 0, 0, 0);
-                // 新ニコニコ実況の開始日
-                var startDate = new DateTime(2020, 12, 16, 11, 00, 00);
                 // キャッシュを使う場合は新ニコニコ実況の開始日を区切りとする
                 if (Settings.Get().Config.UseLoadFromCache)
                 {
-                    return startDate;
+                    return NewNicoJkSince;
                 }
+                return NewJkTimeShiftStartDateTime;
+            }
+        }
+
+        /// <summary>
+        /// この時間以降はタイムシフトが取得可能
+        /// </summary>
+        public static DateTime NewJkTimeShiftStartDateTime
+        {
+            get
+            {
+                var Now = DateTime.Now;
                 // 本日タイムシフトの期限が切れる日
                 // 2021/1/9 0:00 に 2020/12/18 4:00 より前のタイムシフトが切れる
-                var lastTimeShift = new DateTime(Now.Value.Year, Now.Value.Month, Now.Value.Day, 4, 0, 0);
+                var lastTimeShift = new DateTime(Now.Year, Now.Month, Now.Day, 4, 0, 0);
                 lastTimeShift = lastTimeShift.AddDays(-(3 * 7 + 1));
                 // 新ニコニコ実況開始よりも前になった
-                if (lastTimeShift < startDate) { return startDate; }
+                if (lastTimeShift < NewNicoJkSince) { return NewNicoJkSince; }
                 return lastTimeShift;
             }
         }
@@ -60,7 +72,7 @@ namespace JkTsGetter
                 public string GetterOldLogApiUrl { get; set; } = "https://jikkyo.tsukumijima.net/api/kakolog/jk{0}?starttime={1}&endtime={2}&format=xml";
                 // 旧過去ログ取得APIの取得間隔時間
                 public int GetterOldLogApiMaxHour { get; set; } = 72;
-                public string LogCachePath { get; set; } = "";
+                public string LogCachePath { get; set; } = @".\Cache";
                 public bool UseSaveToCache { get; set; } = false;
                 public bool UseLoadFromCache { get; set; } = false;
             }
@@ -246,6 +258,12 @@ namespace JkTsGetter
 
                 foreach (var item in info.data.items)
                 {
+                    // 期限切れのタイムシフトはスキップする
+                    if (item.beginAt < NewJkTimeShiftStartDateTime)
+                    {
+                        continue;
+                    }
+
                     switch (item.category)
                     {
                         case "past":
@@ -347,11 +365,11 @@ namespace JkTsGetter
             var List = new List<DateTime>();
 
             DateTime current = start;
-            if (start < NewJkStartDateTime || Param.AlwaysOldApi)
+            if (start < NewJkBorderDateTime || Param.AlwaysOldApi)
             {
                 List.Add(start);
 
-                TimeSpan span = NewJkStartDateTime - current;
+                TimeSpan span = NewJkBorderDateTime - current;
                 if (span.TotalHours >= Settings.Get().Config.GetterOldLogApiMaxHour || Param.AlwaysOldApi)
                 {
                     do
@@ -363,11 +381,11 @@ namespace JkTsGetter
                             return List;
                         }
                         List.Add(current);
-                        span = NewJkStartDateTime - current;
+                        span = NewJkBorderDateTime - current;
                     } while (span.TotalHours >= Settings.Get().Config.GetterOldLogApiMaxHour || Param.AlwaysOldApi);
                 }
 
-                current = NewJkStartDateTime;
+                current = NewJkBorderDateTime;
             }
 
             while (current < end)
@@ -446,7 +464,7 @@ namespace JkTsGetter
 
             string xmlText = "";
 
-            if (start < NewJkStartDateTime || Param.AlwaysOldApi)
+            if (start < NewJkBorderDateTime || Param.AlwaysOldApi)
             {
                 xmlText = GetOldNicoJKLog(jk, start, end);
                 return xmlText;
@@ -471,17 +489,35 @@ namespace JkTsGetter
                 }
             }
 
+            bool done = false;
             var item = Util.GetTimeShiftItem(channel, getDate.Year, getDate.Month, getDate.Day);
+            if (item != null)
+            {
+                var liveInfo = Util.GetLiveProgramInfo(item.id);
+                if (liveInfo.data.timeshift.Gettable)
+                {
+                    done = true;
+                }
+                else
+                {
+                    Console.WriteLine($"{item.title} のタイムシフトコメントは取得できませんでした");
+                    Console.WriteLine(liveInfo.data.timeshift.ErrorMessage);
 
-            if (item == null)
+                }
+            }
+            else
             {
                 Console.WriteLine("この日のタイムシフトは見つかりませんでした");
+            }
+
+            if (!done)
+            {
                 Console.WriteLine("かわりに過去ログAPIから取得してみます");
 
                 xmlText = GetOldNicoJKLog(jk, start, end);
             }
 
-            bool done = false;
+            done = false;
             string tempFilePath = "";
 
             switch (item.category)
@@ -650,6 +686,14 @@ namespace JkTsGetter
             }
             else
             {
+                var liveInfo = Util.GetLiveProgramInfo(item.id);
+                if (!liveInfo.data.timeshift.Gettable)
+                {
+                    Console.WriteLine($"{item.title} のタイムシフトコメントは取得できませんでした");
+                    Console.WriteLine(liveInfo.data.timeshift.ErrorMessage);
+                    return false;
+                }
+
                 Console.WriteLine($"{item.title} のタイムシフトコメントを取得しています");
             }
             var process = System.Diagnostics.Process.Start(@getterExePath, getterParam);
