@@ -78,6 +78,7 @@ namespace JkTsGetterTool
             this.textToolXml1 = new System.Windows.Forms.TextBox();
             this.labelToolXml1 = new System.Windows.Forms.Label();
             this.tabPageEtc = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.labelAbout = new System.Windows.Forms.Label();
             this.buttonJkTsGetterAbout = new System.Windows.Forms.Button();
@@ -88,7 +89,6 @@ namespace JkTsGetterTool
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControlMain.SuspendLayout();
             this.tabPagePastLog.SuspendLayout();
             this.tabPageTimeShift.SuspendLayout();
@@ -236,7 +236,7 @@ namespace JkTsGetterTool
             this.buttonEndPlus30m.Name = "buttonEndPlus30m";
             this.buttonEndPlus30m.Size = new System.Drawing.Size(100, 23);
             this.buttonEndPlus30m.TabIndex = 11;
-            this.buttonEndPlus30m.Text = "+30日";
+            this.buttonEndPlus30m.Text = "+30分";
             this.buttonEndPlus30m.UseVisualStyleBackColor = true;
             this.buttonEndPlus30m.Click += new System.EventHandler(this.buttonEndPlus30m_Click);
             // 
@@ -654,6 +654,14 @@ namespace JkTsGetterTool
             this.tabPageEtc.Text = "その他";
             this.tabPageEtc.UseVisualStyleBackColor = true;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(17, 212);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox1.TabIndex = 24;
+            this.pictureBox1.TabStop = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -731,14 +739,6 @@ namespace JkTsGetterTool
             this.openFileDialog.DefaultExt = "xml";
             this.openFileDialog.FileName = "openFileDialog1";
             this.openFileDialog.Filter = "ニコニコ実況 コメント ファイル|*.xml; *.nicojk; *.jkl|すべてのファイル|*.*";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(17, 212);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
-            this.pictureBox1.TabIndex = 24;
-            this.pictureBox1.TabStop = false;
             // 
             // FormMain
             // 

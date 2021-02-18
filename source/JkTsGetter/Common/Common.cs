@@ -87,35 +87,13 @@ namespace JkTsGetter
         /// <param name="month"></param>
         /// <param name="day"></param>
         /// <returns></returns>
-        public static ChannelLiveInfo.Item GetTimeShiftItem(Channel channel, int year, int month, int day)
+        public static ChannelLiveInfo.Data GetTimeShiftItem(Channel channel, int year, int month, int day)
         {
             var info = GetChannelLiveInfo(channel);
-            var item = (from x in info.data.items
-                        where x.openedAt.Year == year && x.openedAt.Month == month && x.openedAt.Day == day
+            var item = (from x in info.data
+                        where x.beginAt.Year == year && x.beginAt.Month == month && x.beginAt.Day == day
                         select x).FirstOrDefault();
             return item;
-        }
-
-        /// <summary>
-        /// チャンネルの生放送情報を取得 (全ページ)
-        /// </summary>
-        /// <param name="channel"></param>
-        /// <returns></returns>
-        public static ChannelLiveInfo GetChannelLiveInfo(Channel channel)
-        {
-            ChannelLiveInfo ret = GetChannelLiveInfo(channel, 1);
-
-            // 最大5ページ分まで取得する
-            for (int page = 2; page <= 5; page ++)
-            {
-                ChannelLiveInfo info = GetChannelLiveInfo(channel, page);
-                if (info != null)
-                {
-                    ret.data.items.AddRange(info.data.items);
-                }
-            }
-
-            return ret;
         }
 
         /// <summary>
@@ -123,9 +101,9 @@ namespace JkTsGetter
         /// </summary>
         /// <param name="channel"></param>
         /// <returns></returns>
-        public static ChannelLiveInfo GetChannelLiveInfo(Channel channel, int page)
+        public static ChannelLiveInfo GetChannelLiveInfo(Channel channel)
         {
-            var resText = Util.GetHttpGet($"https://public.api.nicovideo.jp/v1/channel/channelapp/content/lives.json?page={page}&channelId={channel.ch}");
+            var resText = Util.GetHttpGet($"https://public.api.nicovideo.jp/v1/channel/channelapp/channels/{channel.ch}/lives.json?sort=channelpage");
             try
             {
                 return JsonSerializer.Deserialize<ChannelLiveInfo>(resText);
@@ -167,42 +145,39 @@ namespace JkTsGetter
 
         public class Data
         {
-            public string link { get; set; }
-            public string guid { get; set; }
-            public DateTimeOffset lastPublishedAt { get; set; }
-            public List<Item> items { get; set; }
-        }
-
-        public class Item
-        {
             public int id { get; set; }
             public string title { get; set; }
-            public string link { get; set; }
             public string description { get; set; }
+            public string descriptionHtml { get; set; }
+            public string url { get; set; }
             public string thumbnailUrl { get; set; }
-            public bool isPpv { get; set; }
-            public bool isMemberOnly { get; set; }
-            public string category { get; set; }
-            public DateTimeOffset publishedAt { get; set; }
-            public DateTimeOffset openedAt { get; set; }
             public DateTimeOffset beginAt { get; set; }
             public DateTimeOffset endAt { get; set; }
+            public TimeItem showTime { get; set; }
+            public TimeItem onAirTime { get; set; }
+            public string liveCycle { get; set; }
+            public string providerType { get; set; }
+            public string providerId { get; set; }
+            public string socialGroupId { get; set; }
+            public bool isMemberOnly { get; set; }
+            public int viewCount { get; set; }
+            public int commentCount { get; set; }
+            public bool isTimeShiftEnabled { get; set; }
+            public bool isTimeShiftWatchable { get; set; }
+            public bool isPayProgram { get; set; }
+            public bool isSafeThumbnail { get; set; }
+            public bool isR18Category { get; set; }
+            public bool isAdultContnet { get; set; }
+        }
 
-            [JsonIgnore]
-            public int liveId
-            {
-                get
-                {
-                    var pos = link.IndexOf("/watch/");
-                    if (pos < 0) { return -1; }
-                    string idString = link.Substring(pos + "/watch/lv".Length);
-                    return int.TryParse(idString, out int result) ? result : 0;
-                }
-            }
+        public class TimeItem
+        {
+            public DateTimeOffset brginAt { get; set; }
+            public DateTimeOffset endAt { get; set; }
         }
 
         public Meta meta { get; set; }
-        public Data data { get; set; }
+        public List<Data> data { get; set; }
     }
 
     /// <summary>

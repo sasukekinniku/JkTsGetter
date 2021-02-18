@@ -262,13 +262,13 @@ namespace JkTsGetterTool
                 MessageBox.Show(this, "指定した日の生放送はありません");
                 return;
             }
-            if (liveInfo.category == "past")
+            if (liveInfo.liveCycle == "ended")
             {
-                System.Diagnostics.Process.Start(liveInfo.link + $"#{today.Hour}:{today.Minute}:{today.Second}");
+                System.Diagnostics.Process.Start(liveInfo.url + $"#{today.Hour}:{today.Minute}:{today.Second}");
             }
             else
             {
-                System.Diagnostics.Process.Start(liveInfo.link);
+                System.Diagnostics.Process.Start(liveInfo.url);
             }
         }
 

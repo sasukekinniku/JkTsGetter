@@ -256,7 +256,7 @@ namespace JkTsGetter
 
                 var info = Util.GetChannelLiveInfo(channel);
 
-                foreach (var item in info.data.items)
+                foreach (var item in info.data)
                 {
                     // 期限切れのタイムシフトはスキップする
                     if (item.beginAt < NewJkTimeShiftStartDateTime)
@@ -264,13 +264,13 @@ namespace JkTsGetter
                         continue;
                     }
 
-                    switch (item.category)
+                    switch (item.liveCycle)
                     {
-                        case "past":
+                        case "ended":
                             GetChannelLiveComment(channel, item);
                             break;
  
-                        case "current":
+                        case "on_air":
                             // ExecuteGetterChase(channel, item);
                             break;
                     }
@@ -326,9 +326,9 @@ namespace JkTsGetter
         /// <param name="channel"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool GetChannelLiveComment(Channel channel, ChannelLiveInfo.Item item)
+        public bool GetChannelLiveComment(Channel channel, ChannelLiveInfo.Data item)
         {
-            string dateString = item.openedAt.ToString("yyyyMMdd");
+            string dateString = item.beginAt.ToString("yyyyMMdd");
             string defaultFileName = $"jk{channel.jk}_{dateString}.xml";
             string targetPath = Param.GetOutputPath(channel.jk, defaultFileName);
 
@@ -520,13 +520,13 @@ namespace JkTsGetter
             done = false;
             string tempFilePath = "";
 
-            switch (item.category)
+            switch (item.liveCycle)
             {
-                case "past":
+                case "ended":
                     done = ExecuteGetter(out tempFilePath, channel, item, isChase: false);
                     break;
 
-                case "current":
+                case "on_air":
                     done = ExecuteGetter(out tempFilePath, channel, item, isChase: true);
                     break;
             }
@@ -635,10 +635,10 @@ namespace JkTsGetter
         /// <param name="channel"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool GetChannelLiveCommentChase(Channel channel, ChannelLiveInfo.Item item)
+        public bool GetChannelLiveCommentChase(Channel channel, ChannelLiveInfo.Data item)
         {
             DateTime now = DateTime.Now;
-            string dateString = $"{item.openedAt.ToString("yyyyMMdd")}_{now.ToString("HHmmss")}";
+            string dateString = $"{item.beginAt.ToString("yyyyMMdd")}_{now.ToString("HHmmss")}";
             string defaultFileName = $"jk{channel.jk}_{dateString}.xml";
             string channelFolder = $"\\jk{channel.jk}";
             string targetPath = Param.GetOutputPath(channel.jk, defaultFileName);
@@ -666,19 +666,19 @@ namespace JkTsGetter
         /// <param name="channel"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool ExecuteGetter(out string tempFilePath, Channel channel, ChannelLiveInfo.Item item, bool isChase = false)
+        public bool ExecuteGetter(out string tempFilePath, Channel channel, ChannelLiveInfo.Data item, bool isChase = false)
         {
             string getterExePath = JkTsGetter.Settings.Get().GetGetterToolPath();
             string tempFolder = System.IO.Path.GetDirectoryName(getterExePath) + @"\rec";
-            string tempFileName = $"temp_lv{item.liveId}_0";
+            string tempFileName = $"temp_lv{item.id}_0";
             tempFilePath = tempFolder + @"\" + tempFileName + ".xml";
-            string cachePath = GetCacheFilePath(channel.jk, new DateTime(item.openedAt.Year, item.openedAt.Month, item.openedAt.Day));
+            string cachePath = GetCacheFilePath(channel.jk, new DateTime(item.beginAt.Year, item.beginAt.Month, item.beginAt.Day));
 
             if (File.Exists(tempFilePath))
             {
                 File.Delete(tempFilePath);
             }
-            string getterParam = item.link + " -filenameformat=temp_{0} " + JkTsGetter.Settings.Get().Config.GetterToolParam;
+            string getterParam = item.url + " -filenameformat=temp_{0} " + JkTsGetter.Settings.Get().Config.GetterToolParam;
             if (isChase)
             {
                 getterParam += " " + JkTsGetter.Settings.Get().Config.GetterToolParamChase;
@@ -735,17 +735,17 @@ namespace JkTsGetter
                 return;
             }
 
-            switch (item.category)
+            switch (item.liveCycle)
             {
-                case "past":
+                case "on_air":
                     GetChannelLiveComment(channel, item);
                     break;
 
-                case "current":
+                case "ended":
                     GetChannelLiveCommentChase(channel, item);
                     break;
 
-                case "future":
+                case "before_open":
                     Console.WriteLine("未来の生放送番組が指定されています");
                     break;
             }
