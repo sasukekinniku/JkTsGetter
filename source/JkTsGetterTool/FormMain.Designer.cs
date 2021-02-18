@@ -289,7 +289,7 @@ namespace JkTsGetterTool
             this.tabPagePastLog.Padding = new System.Windows.Forms.Padding(3);
             this.tabPagePastLog.Size = new System.Drawing.Size(328, 328);
             this.tabPagePastLog.TabIndex = 0;
-            this.tabPagePastLog.Text = "過去ログ取得";
+            this.tabPagePastLog.Text = "時間指定で取得";
             this.tabPagePastLog.UseVisualStyleBackColor = true;
             // 
             // buttonOpenTimeShiftBrowser
@@ -383,7 +383,7 @@ namespace JkTsGetterTool
             this.tabPageTimeShift.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageTimeShift.Size = new System.Drawing.Size(328, 328);
             this.tabPageTimeShift.TabIndex = 1;
-            this.tabPageTimeShift.Text = "タイムシフト取得";
+            this.tabPageTimeShift.Text = "一日分取得";
             this.tabPageTimeShift.UseVisualStyleBackColor = true;
             // 
             // buttonTimeShiftUpdateCache
