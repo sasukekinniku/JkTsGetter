@@ -494,15 +494,15 @@ namespace JkTsGetter
             if (item != null)
             {
                 var liveInfo = Util.GetLiveProgramInfo(item.id);
-                if (liveInfo.data.timeshift.Gettable)
+                if (liveInfo.data.timeshift.Gettable || liveInfo.data.timeshift.Status == LiveProgramInfo.TimeShift.StatusDef.BeforeRelease)
                 {
+                    // タイムシフト公開前は現在放送中 = 次の処理で追っかけ再生取得ができるとみなす
                     done = true;
                 }
                 else
                 {
                     Console.WriteLine($"{item.title} のタイムシフトコメントは取得できませんでした");
                     Console.WriteLine(liveInfo.data.timeshift.ErrorMessage);
-
                 }
             }
             else
