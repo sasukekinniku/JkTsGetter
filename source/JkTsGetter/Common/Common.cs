@@ -12,6 +12,8 @@ namespace JkTsGetter
 {
     static public class Util
     {
+        static Dictionary<int, string> liveInfoCache = new Dictionary<int, string>();
+
         /// <summary>
         /// Unix時間をDateTimeに変換
         /// </summary>
@@ -97,15 +99,38 @@ namespace JkTsGetter
         }
 
         /// <summary>
+        /// 指定日時の生放送情報を取得する (4時区切りで、複数ある場合は複数取得)
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="day"></param>
+        /// <returns></returns>
+        public static List<ChannelLiveInfo.Data> GetTimeShiftItems(Channel channel, int year, int month, int day)
+        {
+            var info = GetChannelLiveInfo(channel);
+            var item = (from x in info.data
+                        where x.beginAt.Year == year && x.beginAt.Month == month && x.beginAt.Day == day
+                        select x).ToList();
+            return item;
+        }
+
+        /// <summary>
         /// チャンネルの生放送情報を取得 (1ページのみ)
         /// </summary>
         /// <param name="channel"></param>
         /// <returns></returns>
         public static ChannelLiveInfo GetChannelLiveInfo(Channel channel)
         {
+            if (liveInfoCache.ContainsKey(channel.jk))
+            {
+                return JsonSerializer.Deserialize<ChannelLiveInfo>(liveInfoCache[channel.jk]);
+            }
+
             var resText = Util.GetHttpGet($"https://public.api.nicovideo.jp/v1/channel/channelapp/channels/{channel.ch}/lives.json?sort=channelpage");
             try
             {
+                liveInfoCache[channel.jk] = resText;
                 return JsonSerializer.Deserialize<ChannelLiveInfo>(resText);
             }
             catch (Exception)

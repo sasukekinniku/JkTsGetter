@@ -54,6 +54,15 @@ namespace JkTsGetter
         }
 
         /// <summary>
+        /// 取得する予定の日時チャンネル情報
+        /// </summary>
+        public class GetterInfo
+        {
+            public DateTimeOffset Date { get; set; }
+            public Channel Channel { get; set; }
+        }
+
+        /// <summary>
         /// iniファイル設定
         /// </summary>
         public class Settings
@@ -250,6 +259,8 @@ namespace JkTsGetter
                 }
             }
 
+            var getterInfo = new List<GetterInfo>();
+
             foreach (var channel in Channel.Channels)
             {
                 if (channel.ch <= 0) { continue; }
@@ -267,14 +278,22 @@ namespace JkTsGetter
                     switch (item.liveCycle)
                     {
                         case "ended":
-                            GetChannelLiveComment(channel, item);
+                            if (getterInfo.Find(c => c.Channel.ch == channel.ch && c.Date.Date == item.beginAt.AddHours(-4).Date) == null)
+                            {
+                                getterInfo.Add(new GetterInfo { Channel = channel, Date = item.beginAt.AddHours(-4).Date });
+                            }
                             break;
- 
+
                         case "on_air":
                             // ExecuteGetterChase(channel, item);
                             break;
                     }
                 }
+            }
+
+            foreach (var info in getterInfo)
+            {
+                GetTimeShiftComment(info.Channel.jk, info.Date.Year, info.Date.Month, info.Date.Day);
             }
         }
 
@@ -352,6 +371,88 @@ namespace JkTsGetter
 
             Console.WriteLine(targetPath + " に出力しました");
             return true;
+        }
+
+        /// <summary>
+        /// 指定チャンネル、指定生放送のタイムシフトコメントを全取得
+        /// (複数取得して1つのファイルに連結する)
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public bool GetChannelLiveComments(Channel channel, List<ChannelLiveInfo.Data> items)
+        {
+            string dateString = items[0].beginAt.ToString("yyyyMMdd");
+            string defaultFileName = $"jk{channel.jk}_{dateString}.xml";
+            string targetPath = Param.GetOutputPath(channel.jk, defaultFileName);
+
+            if (!OverWriteCheck(targetPath))
+            {
+                return false;
+            }
+
+            XDocument currentXdoc = null;
+            items.Sort((a, b) => a.beginAt.ToUnixTimeSeconds() > b.beginAt.ToUnixTimeSeconds() ? 1 : -1);
+            foreach (var item in items)
+            {
+                string xmlText = GetChannelLiveCommentXmlString(channel, item);
+
+                XDocument xdoc = XDocument.Parse(xmlText);
+                if (currentXdoc == null)
+                {
+                    currentXdoc = xdoc;
+                }
+                else
+                {
+                    currentXdoc.Root.Add(xdoc.Root.Elements());
+                }
+            }
+
+            if (currentXdoc == null)
+            {
+                Console.WriteLine("何も取得できませんでした");
+                return false;
+            }
+
+            if (targetPath.Contains(@"\"))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
+            }
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "";
+
+            using (XmlWriter writer = XmlTextWriter.Create(targetPath, settings))
+            {
+                currentXdoc.Save(writer);
+            }
+
+            Console.WriteLine(targetPath + " に出力しました");
+            return true;
+        }
+
+        /// <summary>
+        /// 指定チャンネル、指定生放送のタイムシフトコメントをstringで全取得する
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        /// <summary>
+        public string GetChannelLiveCommentXmlString(Channel channel, ChannelLiveInfo.Data item)
+        {
+            string xmlText = "";
+
+            if (!ExecuteGetter(out string tempFilePath, channel, item))
+            {
+                return "";
+            }
+
+            StreamReader sr = new StreamReader(tempFilePath, Encoding.UTF8);
+            xmlText = sr.ReadToEnd();
+            sr.Close();
+
+            return xmlText;
         }
 
         /// <summary>
@@ -694,7 +795,14 @@ namespace JkTsGetter
                     return false;
                 }
 
-                Console.WriteLine($"{item.title} のタイムシフトコメントを取得しています");
+                if (item.beginAt.Hour != 4 || item.endAt.Hour != 4)
+                {
+                    Console.WriteLine($"{item.title} ({item.beginAt.ToString("hh:mm")}-{item.endAt.ToString("hh:mm")}) のタイムシフトコメントを取得しています");
+                }
+                else
+                {
+                    Console.WriteLine($"{item.title} のタイムシフトコメントを取得しています");
+                }
             }
             var process = System.Diagnostics.Process.Start(@getterExePath, getterParam);
             process.WaitForExit();
@@ -727,27 +835,33 @@ namespace JkTsGetter
         {
             var channel = Channel.GetChannel(jk);
 
-            var item = Util.GetTimeShiftItem(channel, year, month, day);
+            var items = Util.GetTimeShiftItems(channel, year, month, day);
 
-            if (item == null)
+            if (items == null || items.Count == 0)
             {
                 Console.WriteLine("この日のタイムシフトは見つかりませんでした");
                 return;
             }
-
-            switch (item.liveCycle)
+            else if (items.Count == 1)
             {
-                case "on_air":
-                    GetChannelLiveComment(channel, item);
-                    break;
+                switch (items[0].liveCycle)
+                {
+                    case "ended":
+                        GetChannelLiveComment(channel, items[0]);
+                        break;
 
-                case "ended":
-                    GetChannelLiveCommentChase(channel, item);
-                    break;
+                    case "on_air":
+                        GetChannelLiveCommentChase(channel, items[0]);
+                        break;
 
-                case "before_open":
-                    Console.WriteLine("未来の生放送番組が指定されています");
-                    break;
+                    case "before_open":
+                        Console.WriteLine("未来の生放送番組が指定されています");
+                        break;
+                }
+            }
+            else
+            {
+                GetChannelLiveComments(channel, items);
             }
         }
 
