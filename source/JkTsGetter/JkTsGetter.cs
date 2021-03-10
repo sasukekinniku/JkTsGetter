@@ -270,7 +270,7 @@ namespace JkTsGetter
                 foreach (var item in info.data)
                 {
                     // 期限切れのタイムシフトはスキップする
-                    if (item.beginAt < NewJkTimeShiftStartDateTime)
+                    if (!item.isTimeShiftWatchable)
                     {
                         continue;
                     }
@@ -461,61 +461,108 @@ namespace JkTsGetter
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public List<DateTime> GetDateTimeList(DateTime start, DateTime end)
+        public List<(DateTime time, ChannelLiveInfo.Data liveData)> GetDateTimeList(int jk, DateTime start, DateTime end)
         {
-            var List = new List<DateTime>();
+            var list = new List<(DateTime time, ChannelLiveInfo.Data liveData)>();
 
             DateTime current = start;
-            if (start < NewJkBorderDateTime || Param.AlwaysOldApi)
-            {
-                List.Add(start);
 
-                TimeSpan span = NewJkBorderDateTime - current;
-                if (span.TotalHours >= Settings.Get().Config.GetterOldLogApiMaxHour || Param.AlwaysOldApi)
+            if (Param.AlwaysOldApi)
+            {
+                // 過去ログAPIから取得する時間帯
+                list.Add((current, null));
+                list.Add((end, null));
+            }
+            else
+            {
+                // 生放送が存在するものは生放送から取得する
+                var items = Util.GetChannelLiveInfo(Channel.GetChannel(jk));
+
+                DateTimeOffset nextEndTime;
+
+                while (current < end)
                 {
-                    do
+                    var nearItem = items.data.Find(item => item.beginAt <= current && current < item.endAt && item.beginAt.DateTime >= NewJkBorderDateTime);
+
+                    if (nearItem != null)
                     {
-                        current = current.AddHours(Settings.Get().Config.GetterOldLogApiMaxHour);
-                        if (current >= end)
+                        if (list.Count > 0 && list[list.Count - 1].time == current)
                         {
-                            List.Add(end);
-                            return List;
+                            list.RemoveAt(list.Count - 1);
                         }
-                        List.Add(current);
-                        span = NewJkBorderDateTime - current;
-                    } while (span.TotalHours >= Settings.Get().Config.GetterOldLogApiMaxHour || Param.AlwaysOldApi);
-                }
 
-                current = NewJkBorderDateTime;
+                        list.Add((current, nearItem));
+
+                        current = nearItem.endAt.DateTime;
+                        nextEndTime = nearItem.endAt;
+                    }
+                    else
+                    {
+                        nextEndTime = end;
+
+                        foreach (var item in items.data)
+                        {
+                            if (item.beginAt > current && (item.beginAt - current < nextEndTime - current) && item.beginAt.DateTime >= NewJkBorderDateTime)
+                            {
+                                nearItem = item;
+                                nextEndTime = item.beginAt;
+                            }
+                        }
+                        list.Add((current, null));
+                        if (nearItem != null)
+                        {
+                            list.Add((nearItem.beginAt.DateTime, null));
+                            current = nextEndTime.DateTime;
+                        }
+                        else
+                        {
+                            current = end;
+                        }
+                    }
+
+                    if (end <= current)
+                    {
+                        if (list[list.Count - 1].time != end)
+                        {
+                            list.Add((end, null));
+                        }
+                        break;
+                    }
+                }
             }
 
-            while (current < end)
+            var listResult = new List<(DateTime time, ChannelLiveInfo.Data liveData)>();
+
+            listResult.Add(list[0]);
+            current = list[0].time;
+            list.RemoveAt(0);
+
+            TimeSpan span = NewJkBorderDateTime - current;
+
+            while (list.Count > 0)
             {
-                List.Add(current);
+                var nextTime = list[0].time;
+                var borderTime = current.AddHours(Settings.Get().Config.GetterOldLogApiMaxHour);
 
-                // その日の4時区切り
-                DateTime Time4ji = new DateTime(current.Year, current.Month, current.Day, 4, 0, 0);
-                if (current.Hour >= 4)
+                if (borderTime >= nextTime)
                 {
-                    Time4ji = Time4ji.AddDays(1);
+                    listResult.Add(list[0]);
+                    current = list[0].time;
+                    list.RemoveAt(0);
+                    continue;
                 }
-                if (end > Time4ji)
-                {
-                    current = Time4ji;
-                }
-                else
-                {
-                    break;
-                }
+
+                listResult.Add((borderTime, null));
+                current = borderTime;
             }
 
-            List.Add(end);
 
-            return List;
+                return listResult;
         }
 
         /// <summary>
         /// 指定時間内の過去ログを取得する 4時またぎ・時間分割非対応
+        /// (現在使っていないので動かないかも)
         /// </summary>
         /// <param name="jk"></param>
         /// <param name="start"></param>
@@ -532,7 +579,9 @@ namespace JkTsGetter
                 return false;
             }
 
-            string xmlText = GetLogXmlString(jk, start, end);
+            var items = Util.GetTimeShiftItems(Channel.GetChannel(jk), start.Year, start.Month, start.Day);
+            var item = items.data.Find(item => item.beginAt <= start && start < item.endAt && item.beginAt.DateTime >= NewJkBorderDateTime);
+            string xmlText = GetLogXmlString(jk, start, end, item);
             if (string.IsNullOrEmpty(xmlText))
             {
                 return false;
@@ -555,8 +604,9 @@ namespace JkTsGetter
         /// <param name="jk"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
+        /// <param name="liveData"></param>
         /// <returns></returns>
-        public string GetLogXmlString(int jk, DateTime start, DateTime end)
+        public string GetLogXmlString(int jk, DateTime start, DateTime end, ChannelLiveInfo.Data liveData = null)
         {
             var channel = Channel.GetChannel(jk);
 
@@ -591,7 +641,8 @@ namespace JkTsGetter
             }
 
             bool done = false;
-            var item = Util.GetTimeShiftItem(channel, getDate.Year, getDate.Month, getDate.Day);
+            // var item = Util.GetTimeShiftItem(channel, getDate.Year, getDate.Month, getDate.Day);
+            var item = liveData;
             if (item != null)
             {
                 var liveInfo = Util.GetLiveProgramInfo(item.id);
@@ -608,38 +659,43 @@ namespace JkTsGetter
             }
             else
             {
-                Console.WriteLine("この日のタイムシフトは見つかりませんでした");
+                // Console.WriteLine("この日のタイムシフトは見つかりませんでした");
             }
 
             if (!done)
             {
-                Console.WriteLine("かわりに過去ログAPIから取得してみます");
+                // Console.WriteLine("かわりに過去ログAPIから取得してみます");
 
                 xmlText = GetOldNicoJKLog(jk, start, end);
             }
 
-            done = false;
-            string tempFilePath = "";
-
-            switch (item.liveCycle)
+            if (done)
             {
-                case "ended":
-                    done = ExecuteGetter(out tempFilePath, channel, item, isChase: false);
-                    break;
+                done = false;
+                string tempFilePath = "";
 
-                case "on_air":
-                    done = ExecuteGetter(out tempFilePath, channel, item, isChase: true);
-                    break;
+                switch (item.liveCycle)
+                {
+                    case "ended":
+                        done = ExecuteGetter(out tempFilePath, channel, item, isChase: false);
+                        break;
+
+                    case "on_air":
+                        done = ExecuteGetter(out tempFilePath, channel, item, isChase: true);
+                        break;
+                }
+
+                StreamReader sr = new StreamReader(tempFilePath, Encoding.UTF8);
+                xmlText = sr.ReadToEnd();
+                sr.Close();
+
+                File.Delete(tempFilePath);
             }
 
             if (!done)
             {
                 return "";
             }
-
-            StreamReader sr = new StreamReader(tempFilePath, Encoding.UTF8);
-            xmlText = sr.ReadToEnd();
-            sr.Close();
 
             DateTime getStart = new DateTime(getDate.Year, getDate.Month, getDate.Day, 4, 0, 0);
             DateTime getEnd = getStart.AddDays(1);
@@ -659,8 +715,6 @@ namespace JkTsGetter
                 }
                 xmlText = builder.ToString();
             }
-
-            File.Delete(tempFilePath);
 
             return xmlText;
         }
@@ -684,12 +738,20 @@ namespace JkTsGetter
                 return false;
             }
 
-            var timeList = GetDateTimeList(start, end);
+            var timeList = GetDateTimeList(jk, start, end);
             XDocument currentXdoc = null;
+
+#if false
+            foreach (var time in timeList)
+            {
+                Console.WriteLine($"{time.ToString()}");
+            }
+            while (true) ;
+#endif
 
             while (timeList.Count >= 2)
             {
-                string xmlText = GetLogXmlString(jk, timeList[0], timeList[1]);
+                string xmlText = GetLogXmlString(jk, timeList[0].time, timeList[1].time, timeList[0].liveData);
                 if (string.IsNullOrEmpty(xmlText))
                 {
                     timeList.RemoveAt(0);
