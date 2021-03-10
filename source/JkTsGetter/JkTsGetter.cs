@@ -579,8 +579,9 @@ namespace JkTsGetter
                 return false;
             }
 
+            // ここがちゃんと動いているか未確認
             var items = Util.GetTimeShiftItems(Channel.GetChannel(jk), start.Year, start.Month, start.Day);
-            var item = items.data.Find(item => item.beginAt <= start && start < item.endAt && item.beginAt.DateTime >= NewJkBorderDateTime);
+            var item = items.Find(itm => itm.beginAt <= start && start < itm.endAt && itm.beginAt.DateTime >= NewJkBorderDateTime);
             string xmlText = GetLogXmlString(jk, start, end, item);
             if (string.IsNullOrEmpty(xmlText))
             {
