@@ -270,7 +270,8 @@ namespace JkTsGetter
                 foreach (var item in info.data)
                 {
                     // 期限切れのタイムシフトはスキップする
-                    if (!item.isTimeShiftWatchable)
+                    // if (!item.isTimeShiftWatchable)
+                    if (item.beginAt < NewJkTimeShiftStartDateTime)
                     {
                         continue;
                     }

@@ -90,6 +90,8 @@ namespace JkTsGetter
                     Console.WriteLine("Option:");
                     Console.WriteLine("  -ts       指定チャンネルの特定日のコメントをすべて取得する");
                     Console.WriteLine("  -all      取得可能なすべての実況ニコ生コメントを取得する");
+                    Console.WriteLine("  -all -cache");
+                    Console.WriteLine("            取得可能なすべての実況ニコ生コメントを取得し、JkTsGetter.ini で指定したキャッシュフォルダに保存する");
                     Console.WriteLine("  -m 秒     取得日時の前後を指定秒だけ広げる");
                     Console.WriteLine("  -s 秒     取得開始日時の前後を指定秒だけ広げる");
                     Console.WriteLine("  -e 秒     取得終了日時の前後を指定秒だけ広げる");
