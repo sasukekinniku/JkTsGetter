@@ -302,7 +302,7 @@ namespace JkTsGetter
             new Channel { name = "テレ玉", ch = 0, jk = 10 },
             new Channel { name = "tvk", ch = 0, jk = 11 },
             new Channel { name = "チバテレビ", ch = 0, jk = 12 },
-            new Channel { name = "NHKBS-1", ch = 0, jk = 101 },
+            new Channel { name = "NHK BS1", ch = 2647992, jk = 101 },
             new Channel { name = "NHK BSプレミアム", ch = 0, jk = 103 },
             new Channel { name = "BS 日テレ", ch = 0, jk = 141 },
             new Channel { name = "BS 朝日", ch = 0, jk = 151 },
