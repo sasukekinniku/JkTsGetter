@@ -137,6 +137,9 @@ https://github.com/sasukekinniku/JkTsGetter
 
 ## 更新履歴
 
+### Ver.1.0.0.10 (2022/3/21)
+- BS新局 (BS松竹東急、BSJapanext、BSよしもと) の過去ログAPIからの実況ログ取得に対応した
+
 ### Ver.1.0.0.9 (2021/7/25)
 - NHK BS1 のニコ生実況に対応した
 
