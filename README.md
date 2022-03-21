@@ -137,6 +137,9 @@ https://github.com/sasukekinniku/JkTsGetter
 
 ## 更新履歴
 
+### Ver.1.0.0.11 (2022/3/21)
+- BS新局 (BS松竹東急、BSJapanext、BSよしもと) のtsファイルをドラッグ&ドロップしたとき、チャンネルを自動取得できるようにした
+
 ### Ver.1.0.0.10 (2022/3/21)
 - BS新局 (BS松竹東急、BSJapanext、BSよしもと) の過去ログAPIからの実況ログ取得に対応した
 
